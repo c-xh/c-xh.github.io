@@ -4,15 +4,15 @@
 
 # Site
 title: codemaniac
-subtitle:
-description:
-author: cxh
+subtitle: 
+description: 扯淡
+author: 
 language: zh-Hans
 timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com/
+url: http://codemaniac.cn/
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -77,6 +77,7 @@ theme: next
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type: git 
-  repo: https://github.com/c-xh/c-xh.github.io.git
+  type: git
+  repo: https://c-xh@github.com/c-xh/c-xh.github.io.git
   branch: master
+  message: update blog
