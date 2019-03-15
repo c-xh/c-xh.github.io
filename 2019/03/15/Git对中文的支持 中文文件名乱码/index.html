@@ -79,16 +79,22 @@
 
 
 
-<meta name="description" content="扯淡">
-<meta property="og:type" content="website">
-<meta property="og:title" content="codemaniac">
-<meta property="og:url" content="http://codemaniac.cn/page/2/index.html">
+<meta name="description" content="Git对中文的支持：可以在提交说明中使用中文，但是需要对Git进行设置。至于用中文命名文件、目录和引用，只有在使用UTF-8字符集的环境下才可以，否则应尽量避免使用。 1.UTF-8字符集提交时，可以在提交说明中输入中文；显示提交历史，能够正常显示提交说明中的中文字符；可以添加名称为中文的文件，并可以在同样使用UTF-8字符集的Linux环境中克隆和检出；可以创建带有中文字符的里程碑名称。但是在默">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git对中文的支持 中文文件名乱码解决">
+<meta property="og:url" content="http://codemaniac.cn/2019/03/15/Git对中文的支持 中文文件名乱码/index.html">
 <meta property="og:site_name" content="codemaniac">
-<meta property="og:description" content="扯淡">
+<meta property="og:description" content="Git对中文的支持：可以在提交说明中使用中文，但是需要对Git进行设置。至于用中文命名文件、目录和引用，只有在使用UTF-8字符集的环境下才可以，否则应尽量避免使用。 1.UTF-8字符集提交时，可以在提交说明中输入中文；显示提交历史，能够正常显示提交说明中的中文字符；可以添加名称为中文的文件，并可以在同样使用UTF-8字符集的Linux环境中克隆和检出；可以创建带有中文字符的里程碑名称。但是在默">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://codemaniac.cn/2019/03/15/Git对中文的支持%20中文文件名乱码/Git对中文的支持%20中文文件名乱码01.png">
+<meta property="og:image" content="http://codemaniac.cn/2019/03/15/Git对中文的支持%20中文文件名乱码/98dirrmmbb.png">
+<meta property="og:image" content="http://codemaniac.cn/2019/03/15/Git对中文的支持%20中文文件名乱码/修改内容.png">
+<meta property="og:image" content="http://codemaniac.cn/2019/03/15/Git对中文的支持%20中文文件名乱码/修改效果.png">
+<meta property="og:updated_time" content="2019-03-15T08:18:10.645Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="codemaniac">
-<meta name="twitter:description" content="扯淡">
+<meta name="twitter:title" content="Git对中文的支持 中文文件名乱码解决">
+<meta name="twitter:description" content="Git对中文的支持：可以在提交说明中使用中文，但是需要对Git进行设置。至于用中文命名文件、目录和引用，只有在使用UTF-8字符集的环境下才可以，否则应尽量避免使用。 1.UTF-8字符集提交时，可以在提交说明中输入中文；显示提交历史，能够正常显示提交说明中的中文字符；可以添加名称为中文的文件，并可以在同样使用UTF-8字符集的Linux环境中克隆和检出；可以创建带有中文字符的里程碑名称。但是在默">
+<meta name="twitter:image" content="http://codemaniac.cn/2019/03/15/Git对中文的支持%20中文文件名乱码/Git对中文的支持%20中文文件名乱码01.png">
 
 
 
@@ -118,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://codemaniac.cn/page/2/"/>
+  <link rel="canonical" href="http://codemaniac.cn/2019/03/15/Git对中文的支持 中文文件名乱码/"/>
 
 
 
 
 
-  <title>codemaniac</title>
+  <title>Git对中文的支持 中文文件名乱码解决 | codemaniac</title>
   
 
 
@@ -143,8 +149,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -217,9 +222,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -232,7 +237,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://codemaniac.cn/2019/03/07/Android设置Wifi热点、打开与关闭的监听/">
+    <link itemprop="mainEntityOfPage" href="http://codemaniac.cn/2019/03/15/Git对中文的支持 中文文件名乱码/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -249,9 +254,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/03/07/Android设置Wifi热点、打开与关闭的监听/" itemprop="url">android设置Wifi热点、打开与关闭的监听</a></h1>
+          <h1 class="post-title" itemprop="name headline">Git对中文的支持 中文文件名乱码解决</h1>
         
 
         <div class="post-meta">
@@ -263,8 +266,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-07T19:08:35+08:00">
-                2019-03-07
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-15T16:27:04+08:00">
+                2019-03-15
               </time>
             
 
@@ -301,18 +304,20 @@
       
 
       
-        
-          
-          一、创建热点​    安卓热点的设置步骤，先获取到wifi的服务，再配置热点名称、密码等，因为这部分的代码是安卓隐藏的需要再通过反射打开它就OK了，需要注意的是手机的WiFi连接与热点是不可同时打开的，也就是说如果手机连上了一个现有WiFi，就无法打开自身热点，反之亦然。所以在打开热点是先判断WiF
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/03/07/Android设置Wifi热点、打开与关闭的监听/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+        <p>Git对中文的支持：<br>可以在提交说明中使用中文，但是需要对Git进行设置。至于用中文命名文件、目录和引用，只有在使用UTF-8字符集的环境下才可以，否则应尽量避免使用。</p>
+<h1 id="1-UTF-8字符集"><a href="#1-UTF-8字符集" class="headerlink" title="1.UTF-8字符集"></a>1.UTF-8字符集</h1><p>提交时，可以在提交说明中输入中文；显示提交历史，能够正常显示提交说明中的中文字符；可以添加名称为中文的文件，并可以在同样使用UTF-8字符集的Linux环境中克隆和检出；可以创建带有中文字符的里程碑名称。但是在默认设置下，中文文件名在工作区状态输出、查看历史更改概要，以及在补丁文件中，文件名中的中文不能正确显示，而是显示为八进制的字符编码。设置$git config –global core.quotepath false可以解决中文文件名在这些Git命令输出中的显示问题。</p>
+<p>原因：git 默认中文文件名是 xx%是因为 对0x80以上的字符进行quote，所以只需要使用<em>git config core.quotepath false</em>把core.quotepath设为false的话，就不会对0x80以上的字符进行quote。中文显示就正常了。实际测试可行</p>
+<p><img src="/2019/03/15/Git对中文的支持 中文文件名乱码/Git对中文的支持 中文文件名乱码01.png" alt="Git对中文的支持 中文文件名乱码01"></p>
+<p>#2.GBK字符集<br>若Linux平台采用非UTF-8的字符集，就要另外再做些工作。<br>将显示提交说明所使用的字符集设置为gbk，这样使用git log查看提交说明时才能够正确显示其中的中文$git config –global i18n.logOutputEncoding gbk<br>设置录入提交说明时所使用的字符集，以便在commit对象中正确标注字符集$git config –global i18n.commitEncoding gbk。Git在提交时不会对提交说明进行从GBK字符集到UTF-8的转换，但是可以在提交说明中标注所使用的字符集，因此在非UTF-8字符集的平台中录入中文时需要用此指令设置录入提交说明的字符集，以便在commit对象中嵌入正确的编码说明。</p>
+<p>#3.在cmder中git log中文乱码</p>
+<p>Cmder 是 Windows 下替换原有 cmd 的绝佳工具，但是与默认的 cmd 一样，都与 git 命令行存在一些兼容性问题，比如中文乱码问题。在 Cmder 安装目录下的 <code>config/user-profile.cmd</code> 中添加如下代码，可以解决中文乱码的问题。</p>
+<p><img src="/2019/03/15/Git对中文的支持 中文文件名乱码/98dirrmmbb.png" alt="文件所在地址"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set LANG=zh_CN.UTF8</span><br></pre></td></tr></table></figure>
+<p>添加后的配置文件：</p>
+<p><img src="/2019/03/15/Git对中文的支持 中文文件名乱码/修改内容.png" alt="修改内容"></p>
+<p>添加后重新打开 Cmder 的效果：</p>
+<p><img src="/2019/03/15/Git对中文的支持 中文文件名乱码/修改效果.png" alt="修改效果"></p>
+
       
     </div>
     
@@ -329,142 +334,32 @@
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://codemaniac.cn/2019/03/06/studio过滤log/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="codemaniac">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/03/06/studio过滤log/" itemprop="url">android studio过滤log</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-06T10:01:48+08:00">
-                2019-03-06
-              </time>
+              <a href="/2019/03/15/Android Studio支持系统签名/" rel="next" title="Android Studio支持系统签名">
+                <i class="fa fa-chevron-left"></i> Android Studio支持系统签名
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
+              <a href="/2019/03/15/Java反射基础/" rel="prev" title="Java反射基础">
+                Java反射基础 <i class="fa fa-chevron-right"></i>
+              </a>
             
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-          Android studio过滤log
-^(?!.*(XXX)).*$
-如果需要过滤多个则加“|”
-^(?!.*(XXX|AAA|BBB)).*$
-
-          
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/03/06/studio过滤log/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -474,14 +369,11 @@
   </article>
 
 
-    
-  </section>
 
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
-  </nav>
-
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -489,6 +381,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -509,8 +405,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -570,6 +475,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-UTF-8字符集"><span class="nav-number">1.</span> <span class="nav-text">1.UTF-8字符集</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -703,6 +624,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
