@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="安卓," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一、创建热点​    安卓热点的设置步骤，先获取到wifi的服务，再配置热点名称、密码等，因为这部分的代码是安卓隐藏的需要再通过反射打开它就OK了，需要注意的是手机的WiFi连接与热点是不可同时打开的，也就是说如果手机连上了一个现有WiFi，就无法打开自身热点，反之亦然。所以在打开热点是先判断WiFi是否打开，如果打开则先关闭WiFi，然后再根据设定的热点名和密码创建热点。废话少说，直接上代码：">
+<meta name="keywords" content="安卓">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android设置Wifi热点、打开与关闭的监听">
+<meta property="og:url" content="http://codemaniac.cn/2019/03/07/Android设置Wifi热点、打开与关闭的监听/index.html">
+<meta property="og:site_name" content="codemaniac">
+<meta property="og:description" content="一、创建热点​    安卓热点的设置步骤，先获取到wifi的服务，再配置热点名称、密码等，因为这部分的代码是安卓隐藏的需要再通过反射打开它就OK了，需要注意的是手机的WiFi连接与热点是不可同时打开的，也就是说如果手机连上了一个现有WiFi，就无法打开自身热点，反之亦然。所以在打开热点是先判断WiFi是否打开，如果打开则先关闭WiFi，然后再根据设定的热点名和密码创建热点。废话少说，直接上代码：">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-03-08T06:18:07.427Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="android设置Wifi热点、打开与关闭的监听">
+<meta name="twitter:description" content="一、创建热点​    安卓热点的设置步骤，先获取到wifi的服务，再配置热点名称、密码等，因为这部分的代码是安卓隐藏的需要再通过反射打开它就OK了，需要注意的是手机的WiFi连接与热点是不可同时打开的，也就是说如果手机连上了一个现有WiFi，就无法打开自身热点，反之亦然。所以在打开热点是先判断WiFi是否打开，如果打开则先关闭WiFi，然后再根据设定的热点名和密码创建热点。废话少说，直接上代码：">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://codemaniac.cn/2019/03/07/Android设置Wifi热点、打开与关闭的监听/"/>
+
+
+
+
+
+  <title>android设置Wifi热点、打开与关闭的监听 | codemaniac</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">codemaniac</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://codemaniac.cn/2019/03/07/Android设置Wifi热点、打开与关闭的监听/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="cxh">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="codemaniac">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">android设置Wifi热点、打开与关闭的监听</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-07T19:08:35+08:00">
+                2019-03-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="一、创建热点"><a href="#一、创建热点" class="headerlink" title="一、创建热点"></a>一、创建热点</h1><p>​    安卓热点的设置步骤，先获取到wifi的服务，再配置热点名称、密码等，因为这部分的代码是安卓隐藏的需要再通过反射打开它就OK了，需要注意的是手机的WiFi连接与热点是不可同时打开的，也就是说如果手机连上了一个现有WiFi，就无法打开自身热点，反之亦然。所以在打开热点是先判断WiFi是否打开，如果打开则先关闭WiFi，然后再根据设定的热点名和密码创建热点。废话少说，直接上代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.content.Context;</span><br><span class="line"><span class="keyword">import</span> android.net.wifi.WifiConfiguration;</span><br><span class="line"><span class="keyword">import</span> android.net.wifi.WifiManager;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.FileNotFoundException;</span><br><span class="line"><span class="keyword">import</span> java.io.FileReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.InvocationTargetException;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by cxh on 2019/2/26</span></span><br><span class="line"><span class="comment"> * E-mail: shon.chen@rock-chips.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Wifi_APManager</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"Wifi_APManager"</span>;</span><br><span class="line">    <span class="keyword">private</span> Context mContext;</span><br><span class="line">    <span class="keyword">private</span> WifiManager mWifiManager;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Wifi_APManager</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.mContext = context;</span><br><span class="line">        mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 创建热点</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> mSSID   热点名称</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> mPasswd 热点密码</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> isOpen  是否是开放热点</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startWifiAp</span><span class="params">(String mSSID, String mPasswd, <span class="keyword">boolean</span> isOpen)</span> </span>&#123;</span><br><span class="line">        Method method1 = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            method1 = mWifiManager.getClass().getMethod(<span class="string">"setWifiApEnabled"</span>,</span><br><span class="line">                    WifiConfiguration.class, <span class="keyword">boolean</span>.class);</span><br><span class="line">            WifiConfiguration netConfig = <span class="keyword">new</span> WifiConfiguration();</span><br><span class="line"></span><br><span class="line">            netConfig.SSID = mSSID;</span><br><span class="line">            netConfig.preSharedKey = mPasswd;</span><br><span class="line">            netConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);</span><br><span class="line">            netConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);</span><br><span class="line">            netConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);</span><br><span class="line">            <span class="keyword">if</span> (isOpen) &#123;</span><br><span class="line">                netConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                netConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);</span><br><span class="line">            &#125;</span><br><span class="line">            netConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);</span><br><span class="line">            netConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);</span><br><span class="line">            netConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);</span><br><span class="line">            netConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);</span><br><span class="line">            method1.invoke(mWifiManager, netConfig, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (NoSuchMethodException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InvocationTargetException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取热点密码</span></span><br><span class="line"><span class="comment">     **/</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getAppreSharedKey</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Method localMethod = <span class="keyword">this</span>.mWifiManager.getClass().getDeclaredMethod(<span class="string">"getWifiApConfiguration"</span>, <span class="keyword">new</span> Class[<span class="number">0</span>]);</span><br><span class="line">            <span class="keyword">if</span> (localMethod == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">            Object localObject1 = localMethod.invoke(<span class="keyword">this</span>.mWifiManager, <span class="keyword">new</span> Object[<span class="number">0</span>]);</span><br><span class="line">            <span class="keyword">if</span> (localObject1 == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">            WifiConfiguration localWifiConfiguration = (WifiConfiguration) localObject1;</span><br><span class="line">            <span class="keyword">if</span> (localWifiConfiguration.preSharedKey != <span class="keyword">null</span>)</span><br><span class="line">                <span class="keyword">return</span> localWifiConfiguration.preSharedKey;</span><br><span class="line">            Field localField1 = WifiConfiguration.class.getDeclaredField(<span class="string">"mWifiApProfile"</span>);</span><br><span class="line">            <span class="keyword">if</span> (localField1 == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">            localField1.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            Object localObject2 = localField1.get(localWifiConfiguration);</span><br><span class="line">            localField1.setAccessible(<span class="keyword">false</span>);</span><br><span class="line">            <span class="keyword">if</span> (localObject2 == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">            Field localField2 = localObject2.getClass().getDeclaredField(<span class="string">"preSharedKey"</span>);</span><br><span class="line">            localField2.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            Object localObject3 = localField2.get(localObject2);</span><br><span class="line">            <span class="keyword">if</span> (localObject3 == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">            localField2.setAccessible(<span class="keyword">false</span>);</span><br><span class="line">            String str = (String) localObject3;</span><br><span class="line">            <span class="keyword">return</span> str;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception localException) &#123;</span><br><span class="line">            localException.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取热点名</span></span><br><span class="line"><span class="comment">     **/</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getApSSID</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Method localMethod = <span class="keyword">this</span>.mWifiManager.getClass().getDeclaredMethod(<span class="string">"getWifiApConfiguration"</span>, <span class="keyword">new</span> Class[<span class="number">0</span>]);</span><br><span class="line">            <span class="keyword">if</span> (localMethod == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">            Object localObject1 = localMethod.invoke(<span class="keyword">this</span>.mWifiManager, <span class="keyword">new</span> Object[<span class="number">0</span>]);</span><br><span class="line">            <span class="keyword">if</span> (localObject1 == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">            WifiConfiguration localWifiConfiguration = (WifiConfiguration) localObject1;</span><br><span class="line">            <span class="keyword">if</span> (localWifiConfiguration.SSID != <span class="keyword">null</span>) <span class="keyword">return</span> localWifiConfiguration.SSID;</span><br><span class="line">            Field localField1 = WifiConfiguration.class.getDeclaredField(<span class="string">"mWifiApProfile"</span>);</span><br><span class="line">            <span class="keyword">if</span> (localField1 == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">            localField1.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            Object localObject2 = localField1.get(localWifiConfiguration);</span><br><span class="line">            localField1.setAccessible(<span class="keyword">false</span>);</span><br><span class="line">            <span class="keyword">if</span> (localObject2 == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">            Field localField2 = localObject2.getClass().getDeclaredField(<span class="string">"SSID"</span>);</span><br><span class="line">            localField2.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            Object localObject3 = localField2.get(localObject2);</span><br><span class="line">            <span class="keyword">if</span> (localObject3 == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">            localField2.setAccessible(<span class="keyword">false</span>);</span><br><span class="line">            String str = (String) localObject3;</span><br><span class="line">            <span class="keyword">return</span> str;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception localException) &#123;</span><br><span class="line">            localException.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 检查是否开启Wifi热点</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 是否可用</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isWifiApEnabled</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Method method = mWifiManager.getClass().getMethod(<span class="string">"isWifiApEnabled"</span>);</span><br><span class="line">            method.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            <span class="keyword">return</span> (<span class="keyword">boolean</span>) method.invoke(mWifiManager);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (NoSuchMethodException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InvocationTargetException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 关闭热点</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">closeWifiAp</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);</span><br><span class="line">        <span class="keyword">if</span> (isWifiApEnabled()) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Method method = wifiManager.getClass().getMethod(<span class="string">"getWifiApConfiguration"</span>);</span><br><span class="line">                method.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">                WifiConfiguration config = (WifiConfiguration) method.invoke(wifiManager);</span><br><span class="line">                Method method2 = wifiManager.getClass().getMethod(<span class="string">"setWifiApEnabled"</span>, WifiConfiguration.class, <span class="keyword">boolean</span>.class);</span><br><span class="line">                method2.invoke(wifiManager, config, <span class="keyword">false</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (NoSuchMethodException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InvocationTargetException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 开热点手机获得其他连接手机IP的方法</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 其他手机IP 数组列表</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ArrayList&lt;String&gt; <span class="title">getConnectedIP</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ArrayList&lt;String&gt; connectedIp = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            BufferedReader br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> FileReader(</span><br><span class="line">                    <span class="string">"/proc/net/arp"</span>));</span><br><span class="line">            String line;</span><br><span class="line">            <span class="keyword">while</span> ((line = br.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">                String[] splitted = line.split(<span class="string">" +"</span>);</span><br><span class="line">                <span class="keyword">if</span> (splitted != <span class="keyword">null</span> &amp;&amp; splitted.length &gt;= <span class="number">4</span>) &#123;</span><br><span class="line">                    String ip = splitted[<span class="number">0</span>];</span><br><span class="line">                    <span class="keyword">if</span> (!ip.equalsIgnoreCase(<span class="string">"ip"</span>)) &#123;</span><br><span class="line">                        connectedIp.add(ip);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> connectedIp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="二、监听热点的打开与关闭"><a href="#二、监听热点的打开与关闭" class="headerlink" title="二、监听热点的打开与关闭"></a>二、监听热点的打开与关闭</h1><p>​    安卓热点开关都会有android.net.wifi.WIFI_AP_STATE_CHANGED 的广播的广播，一开始在AndroidManifest.xml中静态注册并没有收到广播，因为Android8.0后，几乎禁止了所有的隐式广播的静态注册监听。官方推荐的替代方法是动态通过调用 Context.registerReceiver()注册广播接收器而不是在清单中声明接收器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WifiReceiver</span> <span class="keyword">extends</span> <span class="title">BroadcastReceiver</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"WifiReceiver"</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> WIFI_AP_STATE_DISABLING = <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> WIFI_AP_STATE_DISABLED = <span class="number">11</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> WIFI_AP_STATE_ENABLING = <span class="number">12</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> WIFI_AP_STATE_ENABLED = <span class="number">13</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> WIFI_AP_STATE_FAILED = <span class="number">14</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String WIFI_AP_STATE_CHANGED_ACTION = <span class="string">"android.net.wifi.WIFI_AP_STATE_CHANGED"</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String EXTRA_WIFI_AP_STATE = <span class="string">"wifi_state"</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String ACTION_TETHER_STATE_CHANGED = <span class="string">"android.net.conn.TETHER_STATE_CHANGED"</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String EXTRA_AVAILABLE_TETHER = <span class="string">"availableArray"</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String EXTRA_ACTIVE_TETHER = <span class="string">"tetherArray"</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String EXTRA_ERRORED_TETHER = <span class="string">"erroredArray"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onReceive</span><span class="params">(Context context, Intent intent)</span> </span>&#123;</span><br><span class="line">        Log.d(TAG, <span class="string">"onReceive Action : "</span> + intent.getAction());</span><br><span class="line">        String action = intent.getAction();</span><br><span class="line">        <span class="keyword">if</span> (action.equals(WifiManager.RSSI_CHANGED_ACTION)) &#123;</span><br><span class="line">            <span class="comment">//signal strength changed</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (ACTION_TETHER_STATE_CHANGED.equals(action)) &#123;</span><br><span class="line">            ArrayList&lt;String&gt; available = intent.getStringArrayListExtra(</span><br><span class="line">                    EXTRA_AVAILABLE_TETHER);</span><br><span class="line">            ArrayList&lt;String&gt; active = intent.getStringArrayListExtra(</span><br><span class="line">                    EXTRA_ACTIVE_TETHER);</span><br><span class="line">            ArrayList&lt;String&gt; errored = intent.getStringArrayListExtra(</span><br><span class="line">                    EXTRA_ERRORED_TETHER);</span><br><span class="line">            Log.d(TAG, <span class="string">"available : "</span> + available + <span class="string">"\tactive :"</span> + active + <span class="string">"\terrored : "</span> + errored);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (action.equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) &#123;<span class="comment">//wifi连接上与否</span></span><br><span class="line">            Log.d(TAG, <span class="string">"网络状态改变"</span>);</span><br><span class="line">            NetworkInfo info = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);</span><br><span class="line">            <span class="keyword">if</span> (info.getState().equals(NetworkInfo.State.DISCONNECTED)) &#123;</span><br><span class="line">                Log.d(TAG, <span class="string">"wifi网络连接断开"</span>);</span><br><span class="line"></span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (info.getState().equals(NetworkInfo.State.CONNECTED)) &#123;</span><br><span class="line">                WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);</span><br><span class="line">                WifiInfo wifiInfo = wifiManager.getConnectionInfo();</span><br><span class="line">                <span class="comment">//获取当前wifi名称</span></span><br><span class="line">                Log.d(TAG, <span class="string">"连接到网络 "</span> + wifiInfo.getSSID());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (WIFI_AP_STATE_CHANGED_ACTION.equals(action)) &#123;</span><br><span class="line">            <span class="comment">//便携式热点的状态为：10---正在关闭；11---已关闭；12---正在开启；13---已开启</span></span><br><span class="line">            <span class="keyword">int</span> state = intent.getIntExtra(EXTRA_WIFI_AP_STATE, <span class="number">0</span>);</span><br><span class="line">            Log.d(TAG, <span class="string">"热点开关状态：state= "</span> + String.valueOf(state));</span><br><span class="line">            <span class="keyword">if</span> (state == WIFI_AP_STATE_ENABLED) &#123;</span><br><span class="line">                Log.d(TAG, <span class="string">"热点已开启"</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (state == WIFI_AP_STATE_DISABLED) &#123;</span><br><span class="line">                Log.d(TAG, <span class="string">"热点已关闭"</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (state == WIFI_AP_STATE_DISABLING) &#123;</span><br><span class="line">                Log.d(TAG, <span class="string">"热点正在关闭"</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (state == WIFI_AP_STATE_ENABLING) &#123;</span><br><span class="line">                Log.d(TAG, <span class="string">"热点正在开启"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (action.equals(WifiManager.WIFI_STATE_CHANGED_ACTION)) &#123;<span class="comment">//wifi打开与否</span></span><br><span class="line">            <span class="keyword">int</span> wifistate = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_DISABLED);</span><br><span class="line">            <span class="keyword">if</span> (wifistate == WifiManager.WIFI_STATE_DISABLED) &#123;</span><br><span class="line">                Log.d(TAG, <span class="string">"系统关闭wifi"</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (wifistate == WifiManager.WIFI_STATE_ENABLED) &#123;</span><br><span class="line">                Log.d(TAG, <span class="string">"系统开启wifi"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后在需要注册的代码添加注册：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">WifiReceiver mWifiReceiver = <span class="keyword">new</span> WifiReceiver();</span><br><span class="line">IntentFilter filter = <span class="keyword">new</span> IntentFilter();</span><br><span class="line">filter.addAction(<span class="string">"android.net.wifi.RSSI_CHANGED"</span>);</span><br><span class="line">filter.addAction(<span class="string">"android.net.wifi.STATE_CHANGE"</span>);</span><br><span class="line">filter.addAction(<span class="string">"android.net.wifi.WIFI_STATE_CHANGED"</span>);<span class="comment">//前面3个wifi的可根据需求添加</span></span><br><span class="line">filter.addAction(<span class="string">"android.net.wifi.WIFI_AP_STATE_CHANGED"</span>);</span><br><span class="line">filter.addAction(<span class="string">"android.net.conn.TETHER_STATE_CHANGED"</span>);</span><br><span class="line">filter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);</span><br><span class="line">getApplicationContext().registerReceiver(mWifiReceiver,filter);</span><br></pre></td></tr></table></figure>
+<h1 id="三、坑-Android8-0监听限制"><a href="#三、坑-Android8-0监听限制" class="headerlink" title="三、坑~Android8.0监听限制"></a>三、坑~Android8.0监听限制</h1><h2 id="广播的相关知识"><a href="#广播的相关知识" class="headerlink" title="广播的相关知识"></a>广播的相关知识</h2><h3 id="注册方式："><a href="#注册方式：" class="headerlink" title="注册方式："></a><strong>注册方式</strong>：</h3><p>静态注册：也称为清单注册，就是在AndroidManifest.xml中注册的广播。此类广播接收器在<strong>应用尚未启动</strong>的时候就可以接收到相应广播。</p>
+<p>动态注册：也称为运行时注册，也就是在Service或者Activity组件中，通过Context.registerReceiver()注册广播接收器。此类广播接收器是在应用已启动后，通过代码进行注册。</p>
+<h3 id="两种类型："><a href="#两种类型：" class="headerlink" title="两种类型："></a>两种类型：</h3><ul>
+<li>显式广播（Explicit Broadcast）：发送的Intent是显示Intent的广播。通过指定Intent组件名称来实现的，它一般用在知道目标组件名称的前提下，去调用以下方法。意图明确，指定了要激活的组件是哪个组件，一般是在相同的应用程序内部实现的。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Intent.setComponent()</span><br><span class="line">Intent.setClassName()</span><br><span class="line">Intent.setClass()</span><br><span class="line"><span class="keyword">new</span> Intent(A.<span class="keyword">this</span>,B.class)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>隐式广播（Implicit Broadcast）：通过Intent Filter来实现的，它一般用在没有明确指出目标组件名称的前提下。Android系统会根据隐式意图中设置的动作(action)、类别(category)、数据（URI和数据类型）找到最合适的组件来处理这个意图。一般是用于在不同应用程序之间。</li>
+</ul>
+<h2 id="Android8-0的后台执行限制"><a href="#Android8-0的后台执行限制" class="headerlink" title="Android8.0的后台执行限制"></a>Android8.0的后台执行限制</h2><p>在Oreo中，为了进一步提升用户体验，进一步节省功耗，对应用在后台运行时可以执行的操作又进一步施加了限制。</p>
+<ul>
+<li><strong>后台服务限制</strong>：处于空闲状态时，限制应用的后台服务。例如：通过静态注册接收开机广播（假设你的设备没做定制，能收到~），并在onReceive方法中启动一个Service，在API 26上，是不允许且会报错的。当然，对于前台服务，这种限制是不存在的。官方说法是：前台服务更容易引起用户注意。</li>
+<li><strong>广播限制</strong>：除了有限的例外之外，应用无法使用清单注册（<strong>静态注册</strong>）的方式来接收<strong>隐式广播</strong>。<ul>
+<li>但对于这些隐式广播，可以通过运行时注册（<strong>动态注册</strong>）的方式注册。</li>
+<li>对于<strong>显式广播</strong>，则依然可以通过清单注册（静态注册）的方式监听</li>
+</ul>
+</li>
+</ul>
+<p>这里多说一句，Android手机的卡顿，很大程度是由于应用滥用且自私的使用各种手段（权限滥用，广播注册，后台服务常驻等）保活或做一些PY事情。Google显然很早就意识到这一点，并从Android 6.0 开始就逐步引入各种限制，比如运行时权限和Doze。</p>
+<p>##具体广播限制和对应赦免清单</p>
+<p>如果应用注册了广播接收器，那么每次发送广播后，应用的广播接收器就会消耗资源，如RAM，CPU等。如果有很多应用对系统事件广播注册广播接收器，这….，就会很卡的嘛！</p>
+<p>所以从Android 7.0 （API 级别 24）开始，就对广播做了一些限制：</p>
+<ul>
+<li>API24及以上应用，静态注册的广播接收器无法监听网络变化：android.net.conn.CONNECTIVITY_CHANGE</li>
+<li>在Android7.0设备上，App无法发送或者接收ACTION_NEW_PICTURE和ACTION_NEW_VIDEO广播。</li>
+</ul>
+<p>只不过，在Android8.0上，又进一步的增强了限制，<strong>除了以下隐式广播外</strong>，其他所有隐式广播均无法通过在AndroidManifest.xml中注册监听。参考<a href="https://link.juejin.im?target=https%3A%2F%2Fdeveloper.android.com%2Fguide%2Fcomponents%2Fbroadcast-exceptions" target="_blank" rel="noopener">官网</a>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Android 8.0 上不限制的隐式广播</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">开机广播</span></span><br><span class="line"><span class="comment"> Intent.ACTION_LOCKED_BOOT_COMPLETED</span></span><br><span class="line"><span class="comment"> Intent.ACTION_BOOT_COMPLETED</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="string">"保留原因：这些广播只在首次启动时发送一次，并且许多应用都需要接收此广播以便进行作业、闹铃等事项的安排。"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">增删用户</span></span><br><span class="line"><span class="comment">Intent.ACTION_USER_INITIALIZE</span></span><br><span class="line"><span class="comment">"android.intent.action.USER_ADDED"</span></span><br><span class="line"><span class="comment">"android.intent.action.USER_REMOVED"</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="string">"保留原因：这些广播只有拥有特定系统权限的app才能监听，因此大多数正常应用都无法接收它们。"</span></span><br><span class="line">    </span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">时区、ALARM变化</span></span><br><span class="line"><span class="comment">"android.intent.action.TIME_SET"</span></span><br><span class="line"><span class="comment">Intent.ACTION_TIMEZONE_CHANGED</span></span><br><span class="line"><span class="comment">AlarmManager.ACTION_NEXT_ALARM_CLOCK_CHANGED</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="string">"保留原因：时钟应用可能需要接收这些广播，以便在时间或时区变化时更新闹铃"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">语言区域变化</span></span><br><span class="line"><span class="comment">Intent.ACTION_LOCALE_CHANGED</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="string">"保留原因：只在语言区域发生变化时发送，并不频繁。 应用可能需要在语言区域发生变化时更新其数据。"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">Usb相关</span></span><br><span class="line"><span class="comment">UsbManager.ACTION_USB_ACCESSORY_ATTACHED</span></span><br><span class="line"><span class="comment">UsbManager.ACTION_USB_ACCESSORY_DETACHED</span></span><br><span class="line"><span class="comment">UsbManager.ACTION_USB_DEVICE_ATTACHED</span></span><br><span class="line"><span class="comment">UsbManager.ACTION_USB_DEVICE_DETACHED</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="string">"保留原因：如果应用需要了解这些 USB 相关事件的信息，目前尚未找到能够替代注册广播的可行方案"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">蓝牙状态相关</span></span><br><span class="line"><span class="comment">BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED</span></span><br><span class="line"><span class="comment">BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED</span></span><br><span class="line"><span class="comment">BluetoothDevice.ACTION_ACL_CONNECTED</span></span><br><span class="line"><span class="comment">BluetoothDevice.ACTION_ACL_DISCONNECTED</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="string">"保留原因：应用接收这些蓝牙事件的广播时不太可能会影响用户体验"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">Telephony相关</span></span><br><span class="line"><span class="comment">CarrierConfigManager.ACTION_CARRIER_CONFIG_CHANGED</span></span><br><span class="line"><span class="comment">TelephonyIntents.ACTION_*_SUBSCRIPTION_CHANGED</span></span><br><span class="line"><span class="comment">TelephonyIntents.SECRET_CODE_ACTION</span></span><br><span class="line"><span class="comment">TelephonyManager.ACTION_PHONE_STATE_CHANGED</span></span><br><span class="line"><span class="comment">TelecomManager.ACTION_PHONE_ACCOUNT_REGISTERED</span></span><br><span class="line"><span class="comment">TelecomManager.ACTION_PHONE_ACCOUNT_UNREGISTERED</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="string">"保留原因：设备制造商 (OEM) 电话应用可能需要接收这些广播"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">账号相关</span></span><br><span class="line"><span class="comment">AccountManager.LOGIN_ACCOUNTS_CHANGED_ACTION</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="string">"保留原因：一些应用需要了解登录帐号的变化，以便为新帐号和变化的帐号设置计划操作"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">应用数据清除</span></span><br><span class="line"><span class="comment">Intent.ACTION_PACKAGE_DATA_CLEARED</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="string">"保留原因：只在用户显式地从 Settings 清除其数据时发送，因此广播接收器不太可能严重影响用户体验"</span></span><br><span class="line">    </span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">软件包被移除</span></span><br><span class="line"><span class="comment">Intent.ACTION_PACKAGE_FULLY_REMOVED</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="string">"保留原因：一些应用可能需要在另一软件包被移除时更新其存储的数据；对于这些应用，尚未找到能够替代注册此广播的可行方案"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">外拨电话</span></span><br><span class="line"><span class="comment">Intent.ACTION_NEW_OUTGOING_CALL</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="string">"保留原因：执行操作来响应用户打电话行为的应用需要接收此广播"</span></span><br><span class="line">    </span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">当设备所有者被设置、改变或清除时发出</span></span><br><span class="line"><span class="comment">DevicePolicyManager.ACTION_DEVICE_OWNER_CHANGED</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="string">"保留原因：此广播发送得不是很频繁；一些应用需要接收它，以便知晓设备的安全状态发生了变化"</span></span><br><span class="line">    </span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">日历相关</span></span><br><span class="line"><span class="comment">CalendarContract.ACTION_EVENT_REMINDER</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="string">"保留原因：由日历provider发送，用于向日历应用发布事件提醒。因为日历provider不清楚日历应用是什么，所以此广播必须是隐式广播。"</span></span><br><span class="line">    </span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">安装或移除存储相关广播</span></span><br><span class="line"><span class="comment">Intent.ACTION_MEDIA_MOUNTED</span></span><br><span class="line"><span class="comment">Intent.ACTION_MEDIA_CHECKING</span></span><br><span class="line"><span class="comment">Intent.ACTION_MEDIA_EJECT</span></span><br><span class="line"><span class="comment">Intent.ACTION_MEDIA_UNMOUNTED</span></span><br><span class="line"><span class="comment">Intent.ACTION_MEDIA_UNMOUNTABLE</span></span><br><span class="line"><span class="comment">Intent.ACTION_MEDIA_REMOVED</span></span><br><span class="line"><span class="comment">Intent.ACTION_MEDIA_BAD_REMOVAL</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="string">"保留原因：这些广播是作为用户与设备进行物理交互的结果：安装或移除存储卷或当启动初始化时（当可用卷被装载）的一部分发送的，因此它们不是很常见，并且通常是在用户的掌控下"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">短信、WAP PUSH相关</span></span><br><span class="line"><span class="comment">Telephony.Sms.Intents.SMS_RECEIVED_ACTION</span></span><br><span class="line"><span class="comment">Telephony.Sms.Intents.WAP_PUSH_RECEIVED_ACTION</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">注意：需要申请以下权限才可以接收</span></span><br><span class="line"><span class="comment">"android.permission.RECEIVE_SMS"</span></span><br><span class="line"><span class="comment">"android.permission.RECEIVE_WAP_PUSH"</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="string">"保留原因：SMS短信应用需要接收这些广播"</span></span><br></pre></td></tr></table></figure>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>按照官方推荐，对于隐式广播，通过以下方法进行替换。</p>
+<ul>
+<li>动态通过调用 <code>Context.registerReceiver()</code>注册广播接收器而不是在清单中声明接收器。</li>
+<li>使用<a href="https://link.juejin.im/?target=https%3A%2F%2Fdeveloper.android.com%2Freference%2Fandroid%2Fapp%2Fjob%2FJobScheduler.html" target="_blank" rel="noopener">JobScheduler</a>。</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/安卓/" rel="tag"># 安卓</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/06/studio过滤log/" rel="next" title="android studio过滤log">
+                <i class="fa fa-chevron-left"></i> android studio过滤log
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/11/TensorFlow学习笔记：1/" rel="prev" title="TensorFlow学习：1">
+                TensorFlow学习：1 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">cxh</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、创建热点"><span class="nav-number">1.</span> <span class="nav-text">一、创建热点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、监听热点的打开与关闭"><span class="nav-number">2.</span> <span class="nav-text">二、监听热点的打开与关闭</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、坑-Android8-0监听限制"><span class="nav-number">3.</span> <span class="nav-text">三、坑~Android8.0监听限制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#广播的相关知识"><span class="nav-number">3.1.</span> <span class="nav-text">广播的相关知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#注册方式："><span class="nav-number">3.1.1.</span> <span class="nav-text">注册方式：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#两种类型："><span class="nav-number">3.1.2.</span> <span class="nav-text">两种类型：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android8-0的后台执行限制"><span class="nav-number">3.2.</span> <span class="nav-text">Android8.0的后台执行限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方法"><span class="nav-number">3.3.</span> <span class="nav-text">解决方法</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cxh</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

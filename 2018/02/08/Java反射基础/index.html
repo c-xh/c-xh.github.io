@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一、Class类的使用all is object：类是对象，类是java.lang.Class类的实例对象  在得知该类的类名时直接在后面.class就可以得到一个class类型的对象 Class c = Foo.class  在已有该类的实例对象的时候，通过这个实例对象调用.getClass()方法，也可以得到一个class类型的对象  在得知该类的路径的时候，调用Class的静态方法Class">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java反射基础">
+<meta property="og:url" content="http://codemaniac.cn/2018/02/08/Java反射基础/index.html">
+<meta property="og:site_name" content="codemaniac">
+<meta property="og:description" content="一、Class类的使用all is object：类是对象，类是java.lang.Class类的实例对象  在得知该类的类名时直接在后面.class就可以得到一个class类型的对象 Class c = Foo.class  在已有该类的实例对象的时候，通过这个实例对象调用.getClass()方法，也可以得到一个class类型的对象  在得知该类的路径的时候，调用Class的静态方法Class">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-02-28T12:09:37.403Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java反射基础">
+<meta name="twitter:description" content="一、Class类的使用all is object：类是对象，类是java.lang.Class类的实例对象  在得知该类的类名时直接在后面.class就可以得到一个class类型的对象 Class c = Foo.class  在已有该类的实例对象的时候，通过这个实例对象调用.getClass()方法，也可以得到一个class类型的对象  在得知该类的路径的时候，调用Class的静态方法Class">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://codemaniac.cn/2018/02/08/Java反射基础/"/>
+
+
+
+
+
+  <title>Java反射基础 | codemaniac</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">codemaniac</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://codemaniac.cn/2018/02/08/Java反射基础/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="cxh">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="codemaniac">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java反射基础</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-08T14:43:40+08:00">
+                2018-02-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="一、Class类的使用"><a href="#一、Class类的使用" class="headerlink" title="一、Class类的使用"></a>一、Class类的使用</h1><p>all is object：类是对象，类是java.lang.Class类的实例对象</p>
+<ol>
+<li><p>在得知该类的类名时直接在后面.class就可以得到一个class类型的对象 Class c = Foo.class</p>
+</li>
+<li><p>在已有该类的实例对象的时候，通过这个实例对象调用.getClass()方法，也可以得到一个class类型的对象</p>
+</li>
+<li><p>在得知该类的路径的时候，调用Class的静态方法ClassForName()方法，就可以得到一个Class类型的对象</p>
+</li>
+</ol>
+<p>用该类的类类型可以创建该类实例对象，用newInstance()方法再强转为该类<br>Foo foo = (Foo)c.newInstance();</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassDemo1</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//Foo的实例对象如何表示</span></span><br><span class="line">        Foo foo1 = <span class="keyword">new</span> Foo();<span class="comment">//foo1就表示出来了.</span></span><br><span class="line">        <span class="comment">//Foo这个类 也是一个实例对象，Class类的实例对象,如何表示呢</span></span><br><span class="line">        <span class="comment">//任何一个类都是Class的实例对象，这个实例对象有三种表示方式</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//第一种表示方式---&gt;实际在告诉我们任何一个类都有一个隐含的静态成员变量class</span></span><br><span class="line">        Class c1 = Foo.class;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//第二中表达方式  已经知道该类的对象通过getClass方法</span></span><br><span class="line">        Class c2 = foo1.getClass();</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*官网 c1 ,c2 表示了Foo类的类类型(class type)</span></span><br><span class="line"><span class="comment">         * 万事万物皆对象，</span></span><br><span class="line"><span class="comment">         * 类也是对象，是Class类的实例对象</span></span><br><span class="line"><span class="comment">         * 这个对象我们称为该类的类类型</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="comment">//不管c1  or c2都代表了Foo类的类类型，一个类只可能是Class类的一个实例对象</span></span><br><span class="line">        System.out.println(c1 == c2);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//第三种表达方式</span></span><br><span class="line">        Class c3 = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            c3 = Class.forName(<span class="string">"com.imooc.reflect.Foo"</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            <span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(c2==c3);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//我们完全可以通过类的类类型创建该类的对象实例----&gt;通过c1 or c2 or c3创建Foo的实例对象</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Foo foo = (Foo)c1.newInstance();<span class="comment">//需要有无参数的构造方法</span></span><br><span class="line">            foo.print();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InstantiationException e) &#123;</span><br><span class="line">            <span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">            <span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"foo"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="二、动态加载类"><a href="#二、动态加载类" class="headerlink" title="二、动态加载类"></a>二、动态加载类</h1><ul>
+<li><p>静态加载类：编译时加载的类（用new关键字创建的类）</p>
+</li>
+<li><p>动态加载类：运行时加载的类（用类类型创建的类，需要有接口，活抽象父类）<br>如 Class c = Class.forName(“类全名”);就是动态加载。<br>接口的引用 = c.newInstance();//创建实例对象，需要有无参构造方法。</p>
+</li>
+</ul>
+<p>当其它的几个类我们不明确到底会使用哪一个的时候，可以定义一个接口让这些类都实现它，这样就可以调用对应的方法了。</p>
+<h1 id="三、获取方法、成员变量、构造函数信息"><a href="#三、获取方法、成员变量、构造函数信息" class="headerlink" title="三、获取方法、成员变量、构造函数信息"></a>三、获取方法、成员变量、构造函数信息</h1><p>基本的数据类型 void关键字都存在类类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassDemo2</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Class c1 = <span class="keyword">int</span>.class;<span class="comment">//int 的类类型</span></span><br><span class="line">        Class c2 = String.class;<span class="comment">//String类的类类型   String类字节码（自己发明的)</span></span><br><span class="line">        Class c3 = <span class="keyword">double</span>.class;</span><br><span class="line">        Class c4 = Double.class;</span><br><span class="line">        Class c5 = <span class="keyword">void</span>.class;</span><br><span class="line">        <span class="comment">//类类型的名称</span></span><br><span class="line">        System.out.println(c1.getName());</span><br><span class="line">        System.out.println(c2.getName());</span><br><span class="line">        <span class="comment">//不带包名的类类型名称</span></span><br><span class="line">        System.out.println(c2.getSimpleName());<span class="comment">//不包含包名的类的名称</span></span><br><span class="line">        System.out.println(c5.getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Class类的基本API操作"><a href="#Class类的基本API操作" class="headerlink" title="Class类的基本API操作"></a>Class类的基本API操作</h2><p>Class类的常用方法：</p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> getName()</td>
+<td>基本数据类型得到的是类名，引用型得到的是引用全称（java.lang.String）</td>
+</tr>
+<tr>
+<td>getMethods()/getFields()</td>
+<td>得到方法/字段的集合，包括父类继承而来的方法/字段,只限 公共的方法/字段</td>
+</tr>
+<tr>
+<td>getDeclaredMethods()/getDeclaredFields()</td>
+<td>得到当前类的方法/字段，不包括父类的，不限公共的还是私有的</td>
+</tr>
+<tr>
+<td>Method的getReturnType()</td>
+<td>得到方法的返回值的类类型</td>
+</tr>
+<tr>
+<td>Method的getParmeterTypes()</td>
+<td>得到的是方法参数的类类型</td>
+</tr>
+</tbody>
+</table>
+<h3 id="java-lang-reflect-Constructor——构造方法的类"><a href="#java-lang-reflect-Constructor——构造方法的类" class="headerlink" title="java.lang.reflect.Constructor——构造方法的类"></a>java.lang.reflect.Constructor——构造方法的类</h3><ul>
+<li>构造函数也是对象</li>
+<li>java.lang. Constructor中封装了构造函数的信息</li>
+<li>getConstructors获取所有的public的构造函数</li>
+<li>getDeclaredConstructors得到所有的构造函数<h3 id="java-lang-reflect-Field——成员变量的类"><a href="#java-lang-reflect-Field——成员变量的类" class="headerlink" title="java.lang.reflect.Field——成员变量的类"></a>java.lang.reflect.Field——成员变量的类</h3></li>
+<li>成员变量也是对象</li>
+<li>Field类封装了关于成员变量的操作</li>
+<li>getFields()方法获取的是所有的public的成员变量的信息</li>
+<li>getDeclaredFields获取的是<h3 id="java-lang-reflect-Method——成员方法的类"><a href="#java-lang-reflect-Method——成员方法的类" class="headerlink" title="java.lang.reflect.Method——成员方法的类"></a>java.lang.reflect.Method——成员方法的类</h3></li>
+<li>Method类，方法对象</li>
+<li>一个成员方法就是一个Method对象</li>
+<li>getMethods()方法获取的是所有的public的函数，包括父类继承而来的</li>
+<li>getDeclaredMethods()获取的是所有该类自己声明的方法，不问访问权限</li>
+</ul>
+<h2 id="实例代码"><a href="#实例代码" class="headerlink" title="实例代码"></a>实例代码</h2><p>ClassUtil</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.reflect.Constructor;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassUtil</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 打印类的信息，包括类的成员函数、成员变量(只获取成员函数)</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> obj 该对象所属类的信息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">printClassMethodMessage</span><span class="params">(Object obj)</span></span>&#123;</span><br><span class="line">        <span class="comment">//要获取类的信息  首先要获取类的类类型</span></span><br><span class="line">        Class c = obj.getClass();<span class="comment">//传递的是哪个子类的对象  c就是该子类的类类型</span></span><br><span class="line">        <span class="comment">//获取类的名称</span></span><br><span class="line">        System.out.println(<span class="string">"类的名称是:"</span>+c.getName());</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * Method类，方法对象</span></span><br><span class="line"><span class="comment">         * 一个成员方法就是一个Method对象</span></span><br><span class="line"><span class="comment">         * getMethods()方法获取的是所有的public的函数，包括父类继承而来的</span></span><br><span class="line"><span class="comment">         * getDeclaredMethods()获取的是所有该类自己声明的方法，不问访问权限</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        Method[] ms = c.getMethods();<span class="comment">//c.getDeclaredMethods()</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; ms.length;i++)&#123;</span><br><span class="line">            <span class="comment">//得到方法的返回值类型的类类型</span></span><br><span class="line">            Class returnType = ms[i].getReturnType();</span><br><span class="line">            System.out.print(returnType.getName()+<span class="string">" "</span>);</span><br><span class="line">            <span class="comment">//得到方法的名称</span></span><br><span class="line">            System.out.print(ms[i].getName()+<span class="string">"("</span>);</span><br><span class="line">            <span class="comment">//获取参数类型---&gt;得到的是参数列表的类型的类类型</span></span><br><span class="line">            Class[] paramTypes = ms[i].getParameterTypes();</span><br><span class="line">            <span class="keyword">for</span> (Class class1 : paramTypes) &#123;</span><br><span class="line">                System.out.print(class1.getName()+<span class="string">","</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">")"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取成员变量的信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> obj</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">printFieldMessage</span><span class="params">(Object obj)</span> </span>&#123;</span><br><span class="line">        Class c = obj.getClass();</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * 成员变量也是对象</span></span><br><span class="line"><span class="comment">         * java.lang.reflect.Field</span></span><br><span class="line"><span class="comment">         * Field类封装了关于成员变量的操作</span></span><br><span class="line"><span class="comment">         * getFields()方法获取的是所有的public的成员变量的信息</span></span><br><span class="line"><span class="comment">         * getDeclaredFields获取的是该类自己声明的成员变量的信息</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="comment">//Field[] fs = c.getFields();</span></span><br><span class="line">        Field[] fs = c.getDeclaredFields();</span><br><span class="line">        <span class="keyword">for</span> (Field field : fs) &#123;</span><br><span class="line">            <span class="comment">//得到成员变量的类型的类类型</span></span><br><span class="line">            Class fieldType = field.getType();</span><br><span class="line">            String typeName = fieldType.getName();</span><br><span class="line">            <span class="comment">//得到成员变量的名称</span></span><br><span class="line">            String fieldName = field.getName();</span><br><span class="line">            System.out.println(typeName+<span class="string">" "</span>+fieldName);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 打印对象的构造函数的信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> obj</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">printConMessage</span><span class="params">(Object obj)</span></span>&#123;</span><br><span class="line">        Class c = obj.getClass();</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * 构造函数也是对象</span></span><br><span class="line"><span class="comment">         * java.lang. Constructor中封装了构造函数的信息</span></span><br><span class="line"><span class="comment">         * getConstructors获取所有的public的构造函数</span></span><br><span class="line"><span class="comment">         * getDeclaredConstructors得到所有的构造函数</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="comment">//Constructor[] cs = c.getConstructors();</span></span><br><span class="line">        Constructor[] cs = c.getDeclaredConstructors();</span><br><span class="line">        <span class="keyword">for</span> (Constructor constructor : cs) &#123;</span><br><span class="line">            System.out.print(constructor.getName()+<span class="string">"("</span>);</span><br><span class="line">            <span class="comment">//获取构造函数的参数列表---&gt;得到的是参数列表的类类型</span></span><br><span class="line">            Class[] paramTypes = constructor.getParameterTypes();</span><br><span class="line">            <span class="keyword">for</span> (Class class1 : paramTypes) &#123;</span><br><span class="line">                System.out.print(class1.getName()+<span class="string">","</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">")"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ClassDemo3</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassDemo3</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String s = <span class="string">"hello"</span>;</span><br><span class="line">        ClassUtil.printClassMethodMessage(s);</span><br><span class="line"></span><br><span class="line">        Integer n1 = <span class="number">1</span>;</span><br><span class="line">        ClassUtil.printClassMethodMessage(n1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="反射方法的基本操作"><a href="#反射方法的基本操作" class="headerlink" title="反射方法的基本操作"></a>反射方法的基本操作</h1><h2 id="方法的反射："><a href="#方法的反射：" class="headerlink" title="方法的反射："></a>方法的反射：</h2><ol>
+<li>方法名称加参数列表可以唯一确定一个方法</li>
+<li>通过方法对象来实现方法的功能，即把实例对象当成参数传给方法对象</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MethodDemo1</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">       <span class="comment">//要获取print(int ,int )方法  1.要获取一个方法就是获取类的信息，获取类的信息首先要获取类的类类型</span></span><br><span class="line">        A a1 = <span class="keyword">new</span> A();</span><br><span class="line">        Class c = a1.getClass();</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * 2.获取方法 名称和参数列表来决定  </span></span><br><span class="line"><span class="comment">         * getMethod获取的是public的方法</span></span><br><span class="line"><span class="comment">         * getDelcaredMethod自己声明的方法</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//Method m =  c.getMethod("print", new Class[]&#123;int.class,int.class&#125;);</span></span><br><span class="line">            Method m = c.getMethod(<span class="string">"print"</span>, <span class="keyword">int</span>.class,<span class="keyword">int</span>.class);</span><br><span class="line"></span><br><span class="line">            <span class="comment">//方法的反射操作  </span></span><br><span class="line">            <span class="comment">//a1.print(10, 20);方法的反射操作是用m对象来进行方法调用 和a1.print调用的效果完全相同</span></span><br><span class="line">            <span class="comment">//方法如果没有返回值返回null,有返回值返回具体的返回值</span></span><br><span class="line">            <span class="comment">//Object o = m.invoke(a1,new Object[]&#123;10,20&#125;);</span></span><br><span class="line">            Object o = m.invoke(a1, <span class="number">10</span>,<span class="number">20</span>);</span><br><span class="line">            System.out.println(<span class="string">"=================="</span>);</span><br><span class="line">            <span class="comment">//获取方法print(String,String)</span></span><br><span class="line">             Method m1 = c.getMethod(<span class="string">"print"</span>,String.class,String.class);</span><br><span class="line">             <span class="comment">//用方法进行反射操作</span></span><br><span class="line">             <span class="comment">//a1.print("hello", "WORLD");</span></span><br><span class="line">             o = m1.invoke(a1, <span class="string">"hello"</span>,<span class="string">"WORLD"</span>);</span><br><span class="line">             System.out.println(<span class="string">"==================="</span>);</span><br><span class="line">           <span class="comment">//  Method m2 = c.getMethod("print", new Class[]&#123;&#125;);</span></span><br><span class="line">                Method m2 = c.getMethod(<span class="string">"print"</span>);</span><br><span class="line">               <span class="comment">// m2.invoke(a1, new Object[]&#123;&#125;);</span></span><br><span class="line">                m2.invoke(a1);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; </span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"helloworld"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">        System.out.println(a+b);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(String a,String b)</span></span>&#123;</span><br><span class="line">        System.out.println(a.toUpperCase()+<span class="string">","</span>+b.toLowerCase());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<pre><code>30
+==================
+HELLO,world
+===================
+helloworld
+</code></pre><h1 id="通过反射了解集合泛型的本质"><a href="#通过反射了解集合泛型的本质" class="headerlink" title="通过反射了解集合泛型的本质"></a>通过反射了解集合泛型的本质</h1><p>Java集合的泛型，是防止错误输入的，只在编译阶段有效，绕过编译就无效了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MethodDemo4</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ArrayList list = <span class="keyword">new</span> ArrayList();</span><br><span class="line"></span><br><span class="line">        ArrayList&lt;String&gt; list1 = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">        list1.add(<span class="string">"hello"</span>);</span><br><span class="line">        <span class="comment">//list1.add(20);错误的</span></span><br><span class="line">        Class c1 = list.getClass();</span><br><span class="line">        Class c2 = list1.getClass();</span><br><span class="line">        System.out.println(c1 == c2);</span><br><span class="line">        <span class="comment">//反射的操作都是编译之后的操作</span></span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * c1==c2结果返回true说明编译之后集合的泛型是去泛型化的</span></span><br><span class="line"><span class="comment">         * Java中集合的泛型，是防止错误输入的，只在编译阶段有效，</span></span><br><span class="line"><span class="comment">         * 绕过编译就无效了</span></span><br><span class="line"><span class="comment">         * 验证：我们可以通过方法的反射来操作，绕过编译</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Method m = c2.getMethod(<span class="string">"add"</span>, Object.class);</span><br><span class="line">            m.invoke(list1, <span class="number">20</span>);<span class="comment">//绕过编译操作就绕过了泛型</span></span><br><span class="line">            System.out.println(list1.size());</span><br><span class="line">            System.out.println(list1);</span><br><span class="line">            <span class="comment">/*for (String string : list1) &#123;</span></span><br><span class="line"><span class="comment">                	System.out.println(string);</span></span><br><span class="line"><span class="comment">            &#125;*/</span><span class="comment">//现在不能这样遍历</span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">          e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/09/安卓代码调用su命令出错原因/" rel="prev" title="安卓代码调用su命令出错原因">
+                安卓代码调用su命令出错原因 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">cxh</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、Class类的使用"><span class="nav-number">1.</span> <span class="nav-text">一、Class类的使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、动态加载类"><span class="nav-number">2.</span> <span class="nav-text">二、动态加载类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、获取方法、成员变量、构造函数信息"><span class="nav-number">3.</span> <span class="nav-text">三、获取方法、成员变量、构造函数信息</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Class类的基本API操作"><span class="nav-number">3.1.</span> <span class="nav-text">Class类的基本API操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#java-lang-reflect-Constructor——构造方法的类"><span class="nav-number">3.1.1.</span> <span class="nav-text">java.lang.reflect.Constructor——构造方法的类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#java-lang-reflect-Field——成员变量的类"><span class="nav-number">3.1.2.</span> <span class="nav-text">java.lang.reflect.Field——成员变量的类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#java-lang-reflect-Method——成员方法的类"><span class="nav-number">3.1.3.</span> <span class="nav-text">java.lang.reflect.Method——成员方法的类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实例代码"><span class="nav-number">3.2.</span> <span class="nav-text">实例代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#反射方法的基本操作"><span class="nav-number">4.</span> <span class="nav-text">反射方法的基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#方法的反射："><span class="nav-number">4.1.</span> <span class="nav-text">方法的反射：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#通过反射了解集合泛型的本质"><span class="nav-number">5.</span> <span class="nav-text">通过反射了解集合泛型的本质</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cxh</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

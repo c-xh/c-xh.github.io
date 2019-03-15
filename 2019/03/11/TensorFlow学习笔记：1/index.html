@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="AI,机器学习,TensorFlow,TensorBoard," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="TensorFlow学习：1参考了 TensorFlow-Course和莫烦Tensorflow的教程 TensorBoard导入首先，我们必须导入必要的库。 123from __future__ import print_functionimport tensorflow as tfimport os 由于我们的目标是使用TensorBoard，我们需要一个目录来存储信息（如果用户需要，操作及其">
+<meta name="keywords" content="AI,机器学习,TensorFlow,TensorBoard">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TensorFlow学习：1">
+<meta property="og:url" content="http://codemaniac.cn/2019/03/11/TensorFlow学习笔记：1/index.html">
+<meta property="og:site_name" content="codemaniac">
+<meta property="og:description" content="TensorFlow学习：1参考了 TensorFlow-Course和莫烦Tensorflow的教程 TensorBoard导入首先，我们必须导入必要的库。 123from __future__ import print_functionimport tensorflow as tfimport os 由于我们的目标是使用TensorBoard，我们需要一个目录来存储信息（如果用户需要，操作及其">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://codemaniac.cn/2019/03/11/TensorFlow学习笔记：1/graph_run.png">
+<meta property="og:updated_time" content="2019-03-15T03:21:39.699Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TensorFlow学习：1">
+<meta name="twitter:description" content="TensorFlow学习：1参考了 TensorFlow-Course和莫烦Tensorflow的教程 TensorBoard导入首先，我们必须导入必要的库。 123from __future__ import print_functionimport tensorflow as tfimport os 由于我们的目标是使用TensorBoard，我们需要一个目录来存储信息（如果用户需要，操作及其">
+<meta name="twitter:image" content="http://codemaniac.cn/2019/03/11/TensorFlow学习笔记：1/graph_run.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://codemaniac.cn/2019/03/11/TensorFlow学习笔记：1/"/>
+
+
+
+
+
+  <title>TensorFlow学习：1 | codemaniac</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">codemaniac</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://codemaniac.cn/2019/03/11/TensorFlow学习笔记：1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="cxh">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="codemaniac">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">TensorFlow学习：1</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-11T14:32:48+08:00">
+                2019-03-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TensorFlow/" itemprop="url" rel="index">
+                    <span itemprop="name">TensorFlow</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="TensorFlow学习：1"><a href="#TensorFlow学习：1" class="headerlink" title="TensorFlow学习：1"></a>TensorFlow学习：1</h1><p>参考了</p>
+<p><a href="https://github.com/machinelearningmindset/TensorFlow-Course" target="_blank" rel="noopener">TensorFlow-Course</a>和<a href="https://morvanzhou.github.io/tutorials/machine-learning/tensorflow/" target="_blank" rel="noopener">莫烦Tensorflow的教程</a></p>
+<h1 id="TensorBoard导入"><a href="#TensorBoard导入" class="headerlink" title="TensorBoard导入"></a>TensorBoard导入</h1><p>首先，我们必须导入必要的库。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> print_function</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> os</span><br></pre></td></tr></table></figure>
+<p>由于我们的目标是使用TensorBoard，我们需要一个目录来存储信息（如果用户需要，操作及其相应的输出）。此信息<code>event files</code>由TensorFlow 导出。<code>event files</code>可以转换为可视数据，以便用户能够评估体系结构和操作。在<code>path</code>存储这些文件，甚至被定义如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">#保存事件文件的默认路径与此python文件的文件夹相同。</span></span><br><span class="line">tf.app.flags.DEFINE_string(</span><br><span class="line">    <span class="string">'log_dir'</span>,</span><br><span class="line">    os.path.dirname(os.path.abspath(__file__)) + <span class="string">'/logs'</span>,</span><br><span class="line">    <span class="string">'Directory where event logs are written to.'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 存放在FLAG的所有元素结构体</span></span><br><span class="line">FLAGS = tf.app.flags.FLAGS</span><br></pre></td></tr></table></figure>
+<p>在<code>os.path.dirname(os.path.abspath(__file__))</code>获取当前Python文件的目录名。<code>tf.app.flags.FLAGS</code>使用<code>FLAGS</code>指标指向所有已定义标志的点。从现在开始，可以使用标记来调用<code>FLAGS.flag_name</code>。</p>
+<p>为方便起见，仅使用它是有用的<code>absolute paths</code>。通过使用以下脚本，用户将提示使用<code>log_dir</code>目录的绝对路径。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#提示用户输入绝对路径。</span></span><br><span class="line"><span class="comment"># os.path.expanduser用于将'~'符号转换为相应的路径指示符。</span></span><br><span class="line"><span class="comment">#        示例：'~/logs'等于'/home/username/logs'，</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.isabs(os.path.expanduser(FLAGS.log_dir)):</span><br><span class="line">    <span class="keyword">raise</span> ValueError(<span class="string">'You must assign absolute path for --log_dir'</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="开始TensorFlow的基础学习"><a href="#开始TensorFlow的基础学习" class="headerlink" title="开始TensorFlow的基础学习"></a>开始TensorFlow的基础学习</h1><h2 id="定义constant常量"><a href="#定义constant常量" class="headerlink" title="定义constant常量"></a>定义constant常量</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#   tf.constant(</span></span><br><span class="line"><span class="comment">#       value,                 value：输出类型的常量值（或列表）dtype。</span></span><br><span class="line"><span class="comment">#       dtype=None,            dtype：结果张量元素的类型。</span></span><br><span class="line"><span class="comment">#       shape=None,            shape：产生张量的可选尺寸。</span></span><br><span class="line"><span class="comment">#       name='Const',          name：张量的可选名称。</span></span><br><span class="line"><span class="comment">#       verify_shape=False     verify_shape：布尔值，用于验证值的形状。</span></span><br><span class="line"><span class="comment">#   )   </span></span><br><span class="line">a = tf.constant(<span class="number">5.0</span>, name=<span class="string">"a"</span>)</span><br><span class="line">b = tf.constant(<span class="number">10.0</span>, name=<span class="string">"b"</span>)<span class="comment"># Constant 2-D tensor populated with scalar value -1.</span></span><br><span class="line">c = tf.constant(<span class="number">-1.0</span>, name=<span class="string">"matrix"</span>, shape=[<span class="number">2</span>, <span class="number">3</span>])  <span class="comment">#  =&gt; [[-1. -1. -1.]</span></span><br><span class="line">                                                    <span class="comment">#      [-1. -1. -1.]]</span></span><br><span class="line"><span class="comment">#使用tf运算</span></span><br><span class="line">x = tf.add(a, b, name=<span class="string">"add"</span>)</span><br><span class="line">y = tf.div(a, b, name=<span class="string">"divide"</span>)</span><br></pre></td></tr></table></figure>
+<p>这里<code>neme</code>就是为了在TensorBoard中更好的可视化，显示的节点的名称所定义。</p>
+<p>参数<code>value</code>可以是常量值，也可以是类型值列表 <code>dtype</code>。如果<code>value</code>是列表，则列表的长度必须小于或等于<code>shape</code>参数隐含的元素数（如果指定）。在列表长度小于指定的元素数量的情况下，列表中<code>shape</code>的最后一个元素将用于填充剩余的条目。</p>
+<p>##Session的激活</p>
+<p>在tf中x，y的add和div并不会直接计算得到结果，需要使用<code>Session</code>来激活x，y并得到计算结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Session使用模式一</span></span><br><span class="line">sess1 = tf.Session()</span><br><span class="line">writer = tf.summary.FileWriter(os.path.expanduser(FLAGS.log_dir), sess1.graph)</span><br><span class="line">result_x = sess1.run(x)</span><br><span class="line"></span><br><span class="line"><span class="comment">#Session使用模式二</span></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess2:</span><br><span class="line">    tf.summary.FileWriter(os.path.expanduser(FLAGS.log_dir), sess2.graph)</span><br><span class="line">    result_y = sess2.run(y)</span><br><span class="line"></span><br><span class="line">print(a)</span><br><span class="line">print(b)</span><br><span class="line">print(c)</span><br><span class="line">print(<span class="string">"result_x = "</span>, result_x)</span><br><span class="line">print(<span class="string">"result_y = "</span>, result_y)</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Tensor(<span class="string">"a:0"</span>, shape=(), dtype=float32)</span><br><span class="line">Tensor(<span class="string">"b:0"</span>, shape=(), dtype=float32)</span><br><span class="line">Tensor(<span class="string">"matrix:0"</span>, shape=(<span class="number">2</span>, <span class="number">3</span>), dtype=float32)</span><br><span class="line">result_x =  <span class="number">15.0</span></span><br><span class="line">result_y =  <span class="number">0.5</span></span><br></pre></td></tr></table></figure>
+<p>#查看TensorBoard保存的数据</p>
+<p>我们在代码中保存了TensorBoard输出log的文件夹为与python文件同级路径下名为logs的文件夹，如果需要修改路径或者文件夹名称可在<code>tf.app.flags.DEFINE_string</code>中修改。</p>
+<p>运行TensorBoard命令为：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> tensorboard --logdir=logs #logs为保存的路径</span><br><span class="line">TensorBoard 1.13.1 at http://cxh-work-PC:6006 (Press CTRL+C to quit)</span><br></pre></td></tr></table></figure>
+<p>这里有一个比较坑的问题，有是有我直接访问tensorboard输出的地址：<a href="http://cxh-work-PC:6006" target="_blank" rel="noopener">http://cxh-work-PC:6006</a> 会报ERR_CONNECTION_REFUSED的错误无法打开网页，改为<a href="http://localhost:6006/" target="_blank" rel="noopener">http://localhost:6006</a> 可以正常打开</p>
+<p><img src="/2019/03/11/TensorFlow学习笔记：1/graph_run.png" alt="graph_run"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/AI/" rel="tag"># AI</a>
+          
+            <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+          
+            <a href="/tags/TensorFlow/" rel="tag"># TensorFlow</a>
+          
+            <a href="/tags/TensorBoard/" rel="tag"># TensorBoard</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/07/Android设置Wifi热点、打开与关闭的监听/" rel="next" title="android设置Wifi热点、打开与关闭的监听">
+                <i class="fa fa-chevron-left"></i> android设置Wifi热点、打开与关闭的监听
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/11/toybrick安装TensorFlow/" rel="prev" title="toybrick安装TensorFlow">
+                toybrick安装TensorFlow <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">cxh</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#TensorFlow学习：1"><span class="nav-number">1.</span> <span class="nav-text">TensorFlow学习：1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TensorBoard导入"><span class="nav-number">2.</span> <span class="nav-text">TensorBoard导入</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开始TensorFlow的基础学习"><span class="nav-number">3.</span> <span class="nav-text">开始TensorFlow的基础学习</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义constant常量"><span class="nav-number">3.1.</span> <span class="nav-text">定义constant常量</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cxh</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
