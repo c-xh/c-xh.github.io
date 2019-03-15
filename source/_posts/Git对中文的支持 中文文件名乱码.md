@@ -16,3 +16,25 @@ Git对中文的支持：
 若Linux平台采用非UTF-8的字符集，就要另外再做些工作。 
 将显示提交说明所使用的字符集设置为gbk，这样使用git log查看提交说明时才能够正确显示其中的中文$git config --global i18n.logOutputEncoding gbk 
 设置录入提交说明时所使用的字符集，以便在commit对象中正确标注字符集$git config --global i18n.commitEncoding gbk。Git在提交时不会对提交说明进行从GBK字符集到UTF-8的转换，但是可以在提交说明中标注所使用的字符集，因此在非UTF-8字符集的平台中录入中文时需要用此指令设置录入提交说明的字符集，以便在commit对象中嵌入正确的编码说明。
+
+
+
+#3.在cmder中git log中文乱码
+
+Cmder 是 Windows 下替换原有 cmd 的绝佳工具，但是与默认的 cmd 一样，都与 git 命令行存在一些兼容性问题，比如中文乱码问题。在 Cmder 安装目录下的 `config/user-profile.cmd` 中添加如下代码，可以解决中文乱码的问题。
+
+![文件所在地址](Git对中文的支持 中文文件名乱码\98dirrmmbb.png)
+
+
+
+```shell
+set LANG=zh_CN.UTF8
+```
+
+添加后的配置文件：
+
+![修改内容](Git对中文的支持 中文文件名乱码\修改内容.png)
+
+添加后重新打开 Cmder 的效果：
+
+![修改效果](git对中文的支持 中文文件名乱码\修改效果.png)
