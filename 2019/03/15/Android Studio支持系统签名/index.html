@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="开发apk需要使用到系统权限就需要在AndroidManifest.xml中共享系统进程的属性： 123android:sharedUserId=&quot;android.uid.system&quot;android:sharedUserId=&quot;android.uid.shared&quot;android:sharedUserId=&quot;android.media&quot; 常用系统签名方式##Android源码环境下签名 这种方式">
+<meta name="description" content="开发apk需要使用到系统权限就需要在AndroidManifest.xml中共享系统进程的属性： 123android:sharedUserId=&quot;android.uid.system&quot;android:sharedUserId=&quot;android.uid.shared&quot;android:sharedUserId=&quot;android.media&quot; 常用系统签名方式Android源码环境下签名这种方式比较麻">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android Studio支持系统签名">
 <meta property="og:url" content="http://codemaniac.cn/2019/03/15/Android Studio支持系统签名/index.html">
 <meta property="og:site_name" content="codemaniac">
-<meta property="og:description" content="开发apk需要使用到系统权限就需要在AndroidManifest.xml中共享系统进程的属性： 123android:sharedUserId=&quot;android.uid.system&quot;android:sharedUserId=&quot;android.uid.shared&quot;android:sharedUserId=&quot;android.media&quot; 常用系统签名方式##Android源码环境下签名 这种方式">
+<meta property="og:description" content="开发apk需要使用到系统权限就需要在AndroidManifest.xml中共享系统进程的属性： 123android:sharedUserId=&quot;android.uid.system&quot;android:sharedUserId=&quot;android.uid.shared&quot;android:sharedUserId=&quot;android.media&quot; 常用系统签名方式Android源码环境下签名这种方式比较麻">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://codemaniac.cn/2019/03/15/Android%20Studio支持系统签名/tu1.png">
 <meta property="og:image" content="http://codemaniac.cn/2019/03/15/Android%20Studio支持系统签名/tu2.png">
-<meta property="og:updated_time" content="2019-03-15T08:18:10.638Z">
+<meta property="og:updated_time" content="2019-04-02T03:22:08.607Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android Studio支持系统签名">
-<meta name="twitter:description" content="开发apk需要使用到系统权限就需要在AndroidManifest.xml中共享系统进程的属性： 123android:sharedUserId=&quot;android.uid.system&quot;android:sharedUserId=&quot;android.uid.shared&quot;android:sharedUserId=&quot;android.media&quot; 常用系统签名方式##Android源码环境下签名 这种方式">
+<meta name="twitter:description" content="开发apk需要使用到系统权限就需要在AndroidManifest.xml中共享系统进程的属性： 123android:sharedUserId=&quot;android.uid.system&quot;android:sharedUserId=&quot;android.uid.shared&quot;android:sharedUserId=&quot;android.media&quot; 常用系统签名方式Android源码环境下签名这种方式比较麻">
 <meta name="twitter:image" content="http://codemaniac.cn/2019/03/15/Android%20Studio支持系统签名/tu1.png">
 
 
@@ -304,8 +304,7 @@
       
         <p>开发apk需要使用到系统权限就需要在AndroidManifest.xml中共享系统进程的属性：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">android:sharedUserId="android.uid.system"</span><br><span class="line">android:sharedUserId="android.uid.shared"</span><br><span class="line">android:sharedUserId="android.media"</span><br></pre></td></tr></table></figure>
-<h1 id="常用系统签名方式"><a href="#常用系统签名方式" class="headerlink" title="常用系统签名方式"></a>常用系统签名方式</h1><p>##Android源码环境下签名</p>
-<p>这种方式比较麻烦，你需要有编译过的源码环境，并按如下步骤：</p>
+<h1 id="常用系统签名方式"><a href="#常用系统签名方式" class="headerlink" title="常用系统签名方式"></a>常用系统签名方式</h1><h2 id="Android源码环境下签名"><a href="#Android源码环境下签名" class="headerlink" title="Android源码环境下签名"></a>Android源码环境下签名</h2><p>这种方式比较麻烦，你需要有编译过的源码环境，并按如下步骤：</p>
 <ol>
 <li>拷贝App源码到Android源码的package/apps/目录下，且App源码是普通（Eclipse）格式的。</li>
 <li><p>配置Android.mk，在其中添加：</p>
@@ -314,7 +313,7 @@
 <li><p>使用mm编译App，生成的apk即是系统签名。</p>
 </li>
 </ol>
-<p>##手动重新签名<br>这种方式比源码环境下签名简单，App可以在Eclipse和Android Studio下编译，然后给apk重新签名即可。 </p>
+<h2 id="手动重新签名"><a href="#手动重新签名" class="headerlink" title="手动重新签名"></a>手动重新签名</h2><p>这种方式比源码环境下签名简单，App可以在Eclipse和Android Studio下编译，然后给apk重新签名即可。 </p>
 <p>但是这种方式在频繁Debug的时候毕竟痛苦，即使写成脚本，也需要重复一样的操作。<br>相关文件：platform.x509.pem、platform.pk8、signapk.jar</p>
 <p>文件位置：</p>
 <ul>
@@ -331,7 +330,7 @@
 <li>检查源apk包，去掉META-INF/CERT.SF和META-INF/CERT.RSA文件。</li>
 <li>执行签名命令即可。</li>
 </ol>
-<p>##Android Studio系统签名<br>让Android Studio集成系统签名，需要用到一个工具keytool-importkeypair，详见下文<br>这个工具的作用是将系统签名的相关信息导入到已有的签名文件里。GitHub地址：<a href="https://github.com/getfatday/keytool-importkeypair" target="_blank" rel="noopener">https://github.com/getfatday/keytool-importkeypair</a></p>
+<h2 id="Android-Studio系统签名"><a href="#Android-Studio系统签名" class="headerlink" title="Android Studio系统签名"></a>Android Studio系统签名</h2><p>让Android Studio集成系统签名，需要用到一个工具keytool-importkeypair，详见下文<br>这个工具的作用是将系统签名的相关信息导入到已有的签名文件里。GitHub地址：<a href="https://github.com/getfatday/keytool-importkeypair" target="_blank" rel="noopener">https://github.com/getfatday/keytool-importkeypair</a></p>
 <p>相关文件<br>platform.x509.pem、platform.pk8、keytool-importkeypair、demo.jks<br>建议在项目创建一个专门的文件夹存放签名文件<br>步骤：</p>
 <ol>
 <li><p>生成demo.jks签名文件 </p>
@@ -517,7 +516,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#常用系统签名方式"><span class="nav-number">1.</span> <span class="nav-text">常用系统签名方式</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#常用系统签名方式"><span class="nav-number">1.</span> <span class="nav-text">常用系统签名方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Android源码环境下签名"><span class="nav-number">1.1.</span> <span class="nav-text">Android源码环境下签名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#手动重新签名"><span class="nav-number">1.2.</span> <span class="nav-text">手动重新签名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Studio系统签名"><span class="nav-number">1.3.</span> <span class="nav-text">Android Studio系统签名</span></a></li></ol></li></ol></div>
             
 
           </div>
