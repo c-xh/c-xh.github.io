@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="su,root," />
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="扯淡">
+<meta name="description" content="4.2.2(Jelly Bean)上root的方法比较简单，调用su命令就可以获取到root权限并执行一些命令。但是在Android 4.3+到5.0，Google为这种root方法设置了层层障碍：   su命令源码中添加了uid检验，只允许shell/root用户进行调用　  Zygote源码中添加了添加DropCapabilitiesBoundingSet屏蔽APP了setuid的功能  ad">
+<meta name="keywords" content="su,root">
 <meta property="og:type" content="article">
-<meta property="og:title" content="通过su命令获取root权限">
+<meta property="og:title" content="tensorflow学习笔记：4激励函数(Activation Function)">
 <meta property="og:url" content="http://codemaniac.cn/2019/08/08/通过su命令获取root权限/index.html">
 <meta property="og:site_name" content="codemaniac">
-<meta property="og:description" content="扯淡">
+<meta property="og:description" content="4.2.2(Jelly Bean)上root的方法比较简单，调用su命令就可以获取到root权限并执行一些命令。但是在Android 4.3+到5.0，Google为这种root方法设置了层层障碍：   su命令源码中添加了uid检验，只允许shell/root用户进行调用　  Zygote源码中添加了添加DropCapabilitiesBoundingSet屏蔽APP了setuid的功能  ad">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-08-08T01:25:29.077Z">
+<meta property="og:updated_time" content="2019-08-08T01:45:11.137Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="通过su命令获取root权限">
-<meta name="twitter:description" content="扯淡">
+<meta name="twitter:title" content="tensorflow学习笔记：4激励函数(Activation Function)">
+<meta name="twitter:description" content="4.2.2(Jelly Bean)上root的方法比较简单，调用su命令就可以获取到root权限并执行一些命令。但是在Android 4.3+到5.0，Google为这种root方法设置了层层障碍：   su命令源码中添加了uid检验，只允许shell/root用户进行调用　  Zygote源码中添加了添加DropCapabilitiesBoundingSet屏蔽APP了setuid的功能  ad">
 
 
 
@@ -125,7 +126,7 @@
 
 
 
-  <title>通过su命令获取root权限 | codemaniac</title>
+  <title>tensorflow学习笔记：4激励函数(Activation Function) | codemaniac</title>
   
 
 
@@ -249,7 +250,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">通过su命令获取root权限</h1>
+          <h1 class="post-title" itemprop="name headline">tensorflow学习笔记：4激励函数(Activation Function)</h1>
         
 
         <div class="post-meta">
@@ -261,7 +262,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-08T09:25:29+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-08T16:54:08+08:00">
                 2019-08-08
               </time>
             
@@ -271,6 +272,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -299,7 +322,54 @@
       
 
       
-        
+        <p>4.2.2(Jelly Bean)上root的方法比较简单，调用su命令就可以获取到root权限并执行一些命令。但是在Android 4.3+到5.0，Google为这种root方法设置了层层障碍： </p>
+<ol>
+<li>su命令源码中添加了uid检验，只允许shell/root用户进行调用　 </li>
+<li>Zygote源码中添加了添加DropCapabilitiesBoundingSet屏蔽APP了setuid的功能 </li>
+<li>adb源码中添加了添加should_drop_privileges屏蔽adb了setuid的功能(对于userdebug/eng版本该函数未被调用) </li>
+<li>开启了SELinux安全模块，1,2条都满足情况下也会被中断su。</li>
+</ol>
+<hr>
+<p>具体解决方法：</p>
+<h2 id="针对前三项的解决方法是按照以下diff文件进行修改代码并重新编译Android系统："><a href="#针对前三项的解决方法是按照以下diff文件进行修改代码并重新编译Android系统：" class="headerlink" title="针对前三项的解决方法是按照以下diff文件进行修改代码并重新编译Android系统："></a>针对前三项的解决方法是按照以下diff文件进行修改代码并重新编译Android系统：</h2><p>su命令源码中添加了uid检验，只允许shell/root用户进行调用　<br>Zygote源码中添加了添加DropCapabilitiesBoundingSet屏蔽APP了setuid的功能<br>adb源码中添加了添加should_drop_privileges屏蔽adb了setuid的功能(对于userdebug/eng版本该函数未被调用)</p>
+<p>以上三项需要改动代码并重新编译Android系统。 </p>
+<p><strong>1，2，3代码修改的diff文件：</strong></p>
+<figure class="highlight plain"><figcaption><span>frameworks/base/</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line">diff --git a/cmds/app_process/app_main.cpp b/cmds/app_process/app_main.cpp</span><br><span class="line">index 1bb28c3..3e69750 100644</span><br><span class="line">--- a/cmds/app_process/app_main.cpp</span><br><span class="line">+++ b/cmds/app_process/app_main.cpp</span><br><span class="line">@@ -185,6 +185,7 @@ static const char ZYGOTE_NICE_NAME[] = &quot;zygote&quot;;</span><br><span class="line"></span><br><span class="line"> int main(int argc, char* const argv[])</span><br><span class="line"> &#123;</span><br><span class="line">+/*</span><br><span class="line">     if (prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0) &lt; 0) &#123;</span><br><span class="line">         // Older kernels don&apos;t understand PR_SET_NO_NEW_PRIVS and return</span><br><span class="line">         // EINVAL. Don&apos;t die on such kernels.</span><br><span class="line">@@ -193,6 +194,7 @@ int main(int argc, char* const argv[])</span><br><span class="line">             return 12;</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line">+*/</span><br><span class="line"></span><br><span class="line">     AppRuntime runtime(argv[0], computeArgBlockSize(argc, argv));</span><br><span class="line">     // Process command line arguments</span><br><span class="line">diff --git a/core/jni/com_android_internal_os_Zygote.cpp b/core/jni/com_android_internal_os_Zygote.cpp</span><br><span class="line">index 4f5e08b..8b136bd 100644</span><br><span class="line">--- a/core/jni/com_android_internal_os_Zygote.cpp</span><br><span class="line">+++ b/core/jni/com_android_internal_os_Zygote.cpp</span><br><span class="line">@@ -208,6 +208,7 @@ static void EnableKeepCapabilities(JNIEnv* env) &#123;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> static void DropCapabilitiesBoundingSet(JNIEnv* env) &#123;</span><br><span class="line">+/*</span><br><span class="line">   for (int i = 0; prctl(PR_CAPBSET_READ, i, 0, 0, 0) &gt;= 0; i++) &#123;</span><br><span class="line">     int rc = prctl(PR_CAPBSET_DROP, i, 0, 0, 0);</span><br><span class="line">     if (rc == -1) &#123;</span><br><span class="line">@@ -220,6 +221,7 @@ static void DropCapabilitiesBoundingSet(JNIEnv* env) &#123;</span><br><span class="line">       &#125;</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">+*/</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> static void SetCapabilities(JNIEnv* env, int64_t permitted, int64_t effective) &#123;</span><br><span class="line"></span><br><span class="line">project system/core/</span><br><span class="line">diff --git a/adb/adb.c b/adb/adb.c</span><br><span class="line">index 10a1e0d..2cd4f97 100644</span><br><span class="line">--- a/adb/adb.c</span><br><span class="line">+++ b/adb/adb.c</span><br><span class="line">@@ -1261,6 +1261,7 @@ static void drop_capabilities_bounding_set_if_needed() &#123;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> static int should_drop_privileges() &#123;</span><br><span class="line">+    return 0;</span><br><span class="line"> #ifndef ALLOW_ADBD_ROOT</span><br><span class="line">     return 1;</span><br><span class="line"> #else /* ALLOW_ADBD_ROOT */</span><br><span class="line">diff --git a/include/private/android_filesystem_config.h b/include/private/android_filesystem_config.h</span><br><span class="line">index 2f528b9..1223b45 100644</span><br><span class="line">--- a/include/private/android_filesystem_config.h</span><br><span class="line">+++ b/include/private/android_filesystem_config.h</span><br><span class="line">@@ -244,7 +244,7 @@ static const struct fs_path_config android_files[] = &#123;</span><br><span class="line"></span><br><span class="line">     /* the following five files are INTENTIONALLY set-uid, but they</span><br><span class="line">      * are NOT included on user builds. */</span><br><span class="line">-    &#123; 04750, AID_ROOT,      AID_SHELL,     0, &quot;system/xbin/su&quot; &#125;,</span><br><span class="line">+ &#123; 06755, AID_ROOT,      AID_SHELL,     0, &quot;system/xbin/su&quot; &#125;,</span><br><span class="line">     &#123; 06755, AID_ROOT,      AID_ROOT,      0, &quot;system/xbin/librank&quot; &#125;,</span><br><span class="line">     &#123; 06755, AID_ROOT,      AID_ROOT,      0, &quot;system/xbin/procrank&quot; &#125;,</span><br><span class="line">     &#123; 06755, AID_ROOT,      AID_ROOT,      0, &quot;system/xbin/procmem&quot; &#125;,</span><br><span class="line">     @@ -255,6 +255,7 @@ static const struct fs_path_config android_files[] = &#123;</span><br><span class="line"></span><br><span class="line">     &#123; 00750, AID_ROOT,      AID_ROOT,      0, &quot;system/bin/uncrypt&quot; &#125;,</span><br><span class="line">     &#123; 00750, AID_ROOT,      AID_ROOT,      0, &quot;system/bin/install-recovery.sh&quot; &#125;,</span><br><span class="line">+ &#123; 06755, AID_ROOT,      AID_ROOT,      0, &quot;system/bin/su&quot; &#125;,</span><br><span class="line">     &#123; 00755, AID_ROOT,      AID_SHELL,     0, &quot;system/bin/*&quot; &#125;,</span><br><span class="line">     &#123; 00755, AID_ROOT,      AID_ROOT,      0, &quot;system/lib/valgrind/*&quot; &#125;,</span><br><span class="line">     &#123; 00755, AID_ROOT,      AID_ROOT,      0, &quot;system/lib64/valgrind/*&quot; &#125;,</span><br><span class="line"></span><br><span class="line">project system/extras/</span><br><span class="line">diff --git a/su/su.c b/su/su.c</span><br><span class="line">index 8365379..826acfc 100644</span><br><span class="line">--- a/su/su.c</span><br><span class="line">+++ b/su/su.c</span><br><span class="line">@@ -107,11 +107,12 @@ int main(int argc, char **argv)</span><br><span class="line"></span><br><span class="line">     /* Until we have something better, only root and the shell can use su. */</span><br><span class="line">     myuid = getuid();</span><br><span class="line">+    /*</span><br><span class="line">     if (myuid != AID_ROOT &amp;&amp; myuid != AID_SHELL) &#123;</span><br><span class="line">         fprintf(stderr,&quot;su: uid %d not allowed to su\n&quot;, myuid);</span><br><span class="line">         return 1;</span><br><span class="line">     &#125;</span><br><span class="line">     -</span><br><span class="line">+    */</span><br><span class="line">     if(argc &lt; 2) &#123;</span><br><span class="line">         uid = gid = 0;</span><br><span class="line">     &#125; else &#123;</span><br></pre></td></tr></table></figure>
+<h2 id="设置SELinux权限为Permissive"><a href="#设置SELinux权限为Permissive" class="headerlink" title="设置SELinux权限为Permissive"></a>设置SELinux权限为Permissive</h2><p>我是尽量把事情简单化，这次这里讨论的是SELinux，其实现原理会比较复杂，我这里只是简单记录在Android 5.0 + Linux 3.4如何将SELinux降级，这么做的原因是实现：APP可以调用su命令最终实现运行一些命令。</p>
+<p>SELinux常用状态有两个Permissive 和 Enforcing，后者会使APP无法调用su命令，前者可以。 </p>
+<ol>
+<li>查询当前SELinux状态：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell getenforce</span><br></pre></td></tr></table></figure>
+<p>运行该命令后，会输出当前系统的SELinux权限Permissive 和 Enforcing。 </p>
+<ol>
+<li>在eng/userdebug版本 将SELinux 模式调整到Permissive mode</li>
+</ol>
+<p><strong>临时方案</strong>：运行如下命令（无需重启系统，即刻见效）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell setenforce 0</span><br></pre></td></tr></table></figure>
+<p><strong>长久方案</strong>:在启动参数中添加</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">androidboot.selinux=permissive</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="ROOT不成功问题解决方法"><a href="#ROOT不成功问题解决方法" class="headerlink" title="ROOT不成功问题解决方法"></a>ROOT不成功问题解决方法</h2><p>root不成功主要是因为没有改全这些项，有其中一项没有改好都会造成root不成功。这里把每项没有改好会造成的问题列出来以供参考。</p>
+<p>安装运行 HelloRoot App，这是一个协助查看是否能获取root权限的小工具。</p>
+<p>查看HelloRoot的Application user id</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@nanopi2:/ # ps | grep com.example.helloroot</span><br><span class="line">u0_a50    1283  121   1233532 40640 ffffffff b6e791c4 S com.example.helloroot</span><br><span class="line">root@nanopi2:/ #</span><br></pre></td></tr></table></figure>
+<p>其中u0_a50就是HelloRoot的Application user id了，这个id在下面步骤中会用到；</p>
+<p>切换到u0_a50用户下并运行su命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">root@nanopi2:/ # su u0_a50</span><br><span class="line">root@nanopi2:/ $ id</span><br><span class="line">uid=10050(u0_a50) gid=10050(u0_a50) groups=1003(graphics),1004(input),1007(log),1011(adb),1015(sdcard_rw),1028(sdcard_r),3001(net_bt_admin),3002(net_bt),3003(inet),3006(net_bw_stats) context=u:r:su:s0</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 以u0_a50身份运行su命令，正常情况下会再切到root权限下</span><br><span class="line">root@nanopi2:/ $ su</span><br><span class="line">root@nanopi2:/ #</span><br></pre></td></tr></table></figure>
+<p><strong>不正常的话会出现如下错误：</strong><br>su: can’t execute: Permission denied<br>这个属于u0_a50对su无可执行权限，说明include/private/android_filesystem_config.h中需要改的内容没有改或者是没有改成功。<br>su: uid 10050 not allowed to su<br>这个属于su不允许su和shell以外的用户（比如u0_a50）调用，说明su.c中需要改的内容没有改或者是没有改成功。</p>
+<p>点击CheckRoot按钮，判断App是否可以root，如果Log信息如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">System.err: java.io.IOException: Error running exec(). Command: [su] Working Directory: null Environment: null</span><br><span class="line">System.err:     at java.lang.ProcessManager.exec(ProcessManager.java:211)</span><br><span class="line">System.err:     at java.lang.Runtime.exec(Runtime.java:173)</span><br><span class="line">System.err:     at java.lang.Runtime.exec(Runtime.java:246)</span><br><span class="line">System.err:     at java.lang.Runtime.exec(Runtime.java:189)</span><br><span class="line">System.err:     at cn.trinea.android.common.util.ShellUtils.execCommand(ShellUtils.java:135)</span><br><span class="line">System.err:     at cn.trinea.android.common.util.ShellUtils.execCommand(ShellUtils.java:93)</span><br><span class="line">System.err:     at cn.trinea.android.common.util.ShellUtils.checkRootPermission(ShellUtils.java:44)</span><br><span class="line">System.err:     at com.example.helloroot.MainActivity.onCreate(MainActivity.java:25)</span><br><span class="line">System.err:     at android.app.Activity.performCreate(Activity.java:5990)</span><br><span class="line">System.err:     at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1106)</span><br><span class="line">System.err:     at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2278)</span><br><span class="line">System.err:     at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2387)</span><br><span class="line">System.err:     at android.app.ActivityThread.access$800(ActivityThread.java:151)</span><br><span class="line">System.err:     at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1303)</span><br><span class="line">System.err:     at android.os.Handler.dispatchMessage(Handler.java:102)</span><br><span class="line">System.err:     at android.os.Looper.loop(Looper.java:135)</span><br><span class="line">System.err:     at android.app.ActivityThread.main(ActivityThread.java:5254)</span><br><span class="line">System.err:     at java.lang.reflect.Method.invoke(Native Method)</span><br><span class="line">System.err:     at java.lang.reflect.Method.invoke(Method.java:372)</span><br><span class="line">System.err:     at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:903)</span><br><span class="line">System.err:     at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:698)</span><br><span class="line">System.err: Caused by: java.io.IOException: Permission denied</span><br><span class="line">System.err:     at java.lang.ProcessManager.exec(Native Method)</span><br><span class="line">System.err:     at java.lang.ProcessManager.exec(ProcessManager.java:209)</span><br><span class="line">System.err:     ... 20 more</span><br><span class="line">System.err: java.io.IOException: Error running exec(). Command: [su] Working Directory: null Environment: null</span><br><span class="line">System.err:     at java.lang.ProcessManager.exec(ProcessManager.java:211)</span><br><span class="line">System.err:     at java.lang.Runtime.exec(Runtime.java:173)</span><br><span class="line">System.err:     at java.lang.Runtime.exec(Runtime.java:246)</span><br><span class="line">System.err:     at java.lang.Runtime.exec(Runtime.java:189)</span><br><span class="line">System.err:     at cn.trinea.android.common.util.ShellUtils.execCommand(ShellUtils.java:135)</span><br><span class="line">System.err:     at cn.trinea.android.common.util.ShellUtils.execCommand(ShellUtils.java:56)</span><br><span class="line">System.err:     at com.example.helloroot.MainActivity.onCreate(MainActivity.java:26)</span><br><span class="line">System.err:     at android.app.Activity.performCreate(Activity.java:5990)</span><br><span class="line">System.err:     at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1106)</span><br><span class="line">System.err:     at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2278)</span><br><span class="line">System.err:     at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2387)</span><br><span class="line">System.err:     at android.app.ActivityThread.access$800(ActivityThread.java:151)</span><br><span class="line">System.err:     at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1303)</span><br><span class="line">System.err:     at android.os.Handler.dispatchMessage(Handler.java:102)</span><br><span class="line">System.err:     at android.os.Looper.loop(Looper.java:135)</span><br><span class="line">System.err:     at android.app.ActivityThread.main(ActivityThread.java:5254)</span><br><span class="line">System.err:     at java.lang.reflect.Method.invoke(Native Method)</span><br><span class="line">System.err:     at java.lang.reflect.Method.invoke(Method.java:372)</span><br><span class="line">System.err:     at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:903)</span><br><span class="line">System.err:     at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:698)</span><br><span class="line">System.err: Caused by: java.io.IOException: Permission denied</span><br><span class="line">System.err:     at java.lang.ProcessManager.exec(Native Method)</span><br><span class="line">System.err:     at      ... 19 more</span><br></pre></td></tr></table></figure>
+<p><strong>A. 出现这个问题是由于没有将SELinux关闭，需要按照以下方法查看</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 通过查看SELinux状态</span><br><span class="line">root@nanopi2:/ # getenforce</span><br><span class="line">Enforcing</span><br></pre></td></tr></table></figure>
+<p>需要按照「设置SELinux权限为Permissive」进行设置。<br>B. 无法setuid的限制修改<br>core/jni/com_android_internal_os_Zygote.cpp和cmds/app_process/app_main.cpp修改。</p>
+<p>参考文档： </p>
+<ol>
+<li>How to set SELinux to 0 or permissive mode in android 4.4.4 and above? by user1147688 </li>
+<li>user版本如何打开root权限 </li>
+<li>NanoPi T2 QQ群中网友：孤独的狼</li>
+</ol>
+
       
     </div>
     
@@ -314,6 +384,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/su/" <i class="fa fa-tag"></i> su</a>
+          
+            <a href="/tags/root/" <i class="fa fa-tag"></i> root</a>
+          
+        </div>
+      
 
       
       
@@ -323,7 +401,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/03/15/TensorFlow学习笔记：4-激励函数/" rel="next" title="tensorflow学习笔记：4激励函数(Activation Function)">
+              <a href="/2019/08/08/Android 5.0 后 通过su命令获取root权限/" rel="next" title="tensorflow学习笔记：4激励函数(Activation Function)">
                 <i class="fa fa-chevron-left"></i> tensorflow学习笔记：4激励函数(Activation Function)
               </a>
             
@@ -332,10 +410,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/08/08/Android 5.0 后 通过su命令获取root权限/" rel="prev" title="tensorflow学习笔记：4激励函数(Activation Function)">
-                tensorflow学习笔记：4激励函数(Activation Function) <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -387,8 +461,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -448,6 +531,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#针对前三项的解决方法是按照以下diff文件进行修改代码并重新编译Android系统："><span class="nav-number">1.</span> <span class="nav-text">针对前三项的解决方法是按照以下diff文件进行修改代码并重新编译Android系统：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置SELinux权限为Permissive"><span class="nav-number">2.</span> <span class="nav-text">设置SELinux权限为Permissive</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ROOT不成功问题解决方法"><span class="nav-number">3.</span> <span class="nav-text">ROOT不成功问题解决方法</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
